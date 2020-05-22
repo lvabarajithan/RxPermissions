@@ -1,0 +1,143 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+def isReleaseBuild() {
+    return !VERSION_NAME.contains("SNAPSHOT");
+}
+
+def getReleaseRepositoryUrl() {
+    println "Reading Maven repository Release URL from gradle.properties 'RELEASE_REPOSITORY_URL'"
+    if (hasProperty('RELEASE_REPOSITORY_URL')) {
+        return RELEASE_REPOSITORY_URL;
+    }
+    throw new InvalidUserDataException("RELEASE_REPOSITORY_URL is not defined");
+}
+
+def getSnapshotRepositoryUrl() {
+    println "Reading Maven repository Snapshot URL from gradle.properties 'SNAPSHOT_REPOSITORY_URL'"
+    if (hasProperty('SNAPSHOT_REPOSITORY_URL')) {
+        return SNAPSHOT_REPOSITORY_URL;
+    }
+    throw new InvalidUserDataException("SNAPSHOT_REPOSITORY_URL is not defined");
+}
+
+def getRepositoryUsername() {
+    println "Reading Maven repository username from gradle.properties 'mavenRepositoryUsername'"
+    if (hasProperty('mavenRepositoryUsername')) {
+        return mavenRepositoryUsername;
+    }
+    throw new InvalidUserDataException("mavenRepositoryUsername is not defined, check your user ~/.gradle/gradle.properties file");
+}
+
+def getRepositoryPassword() {
+    println "Reading Maven repository password from gradle.properties 'mavenRepositoryPassword'"
+    if (hasProperty('mavenRepositoryPassword')) {
+        return mavenRepositoryPassword;
+    }
+    throw new InvalidUserDataException("mavenRepositoryPassword is not defined, check your user ~/.gradle/gradle.properties file");
+}
+
+afterEvaluate { project ->
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                pom.groupId = GROUP
+                pom.artifactId = POM_ARTIFACT_ID
+                pom.version = VERSION_NAME
+
+                repository(url: getReleaseRepositoryUrl()) {
+                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+                }
+                snapshotRepository(url: getSnapshotRepositoryUrl()) {
+                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+                }
+
+                pom.project {
+                    name POM_NAME
+                    packaging POM_PACKAGING
+                    description POM_DESCRIPTION
+                    url POM_URL
+
+                    scm {
+                        url POM_SCM_URL
+                        connection POM_SCM_CONNECTION
+                        developerConnection POM_SCM_DEV_CONNECTION
+                    }
+
+                    licenses {
+                        license {
+                            name POM_LICENCE_NAME
+                            url POM_LICENCE_URL
+                            distribution POM_LICENCE_DIST
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id POM_DEVELOPER_ID
+                            name POM_DEVELOPER_NAME
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    signing {
+        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+        sign configurations.archives
+    }
+
+    task androidJavadocs(type: Javadoc) {
+        // execute only if I'm publishing on maven
+        onlyIf { gradle.taskGraph.hasTask(uploadArchives) }
+
+        // all the sources of the current module
+        source = android.sourceSets.main.java.srcDirs
+        // the Android SDK classpath
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        // all the dependencies classpaths
+        classpath += configurations.compile
+
+        // Honestly I do not remember why it's a good idea to exclude these
+        exclude '**/BuildConfig.class'
+        exclude '**/R.class'
+        exclude '**/R$*.class'
+
+        options {
+            // Java reference
+            links("http://docs.oracle.com/javase/8/docs/api/");
+
+            // dependencies API references (I should probably move these in the project or something)
+            links("http://reactivex.io/RxJava/javadoc/");
+            links("https://google.github.io/gson/apidocs/");
+
+            // Android reference is not standard javadoc so I need to use offline directory
+            linksOffline("http://d.android.com/reference/", "${android.sdkDirectory}/docs/reference")
+
+            // Java 8 javadoc is more strict, This disable that strictness
+            if (JavaVersion.current().isJava8Compatible()) {
+                addStringOption('Xdoclint:none', '-quiet')
+            }
+        }
+        // uncomment to avoid failing the build if javadoc fails
+//        failOnError false
+    }
+
+    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+        classifier = 'javadoc'
+        from androidJavadocs.destinationDir
+    }
+
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.sourceFiles
+    }
+
+    artifacts {
+        archives androidSourcesJar
+        archives androidJavadocsJar
+    }
+}

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RxPermissions</string>
+    <string name="empty_permissions">No permissions granted</string>
+    <string name="ask_button">Ask permission</string>
+</resources>
