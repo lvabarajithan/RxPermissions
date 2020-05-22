@@ -41,6 +41,11 @@ PermissionResult.rationale  // true or false
 2. Use `.requestSkipGranted(...)` method to skip the results of already granted permission results.
 3. Use `.requestSimple(...)` method to get just `true` or `false` values, if you don't care about rationale permission results.
 
+## Installation
+```
+... Available soon (Keep checking) ...
+```
+
 ## License
 
 ```
