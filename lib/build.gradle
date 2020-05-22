@@ -64,3 +64,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
