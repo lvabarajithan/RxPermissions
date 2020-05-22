@@ -7,7 +7,7 @@ ext {
     bintrayName = 'rxpermissions'
 
     publishedGroupId = 'com.abarajithan.rxpermissions'
-    libraryName = 'RxPermissions'
+    libraryName = 'rxpermissions'
     artifact = 'rxpermissions'
 
     libraryDescription = 'Android Runtime permissions powered by RxJava3'
@@ -49,6 +49,10 @@ android {
         targetCompatibility = 1.8
     }
 
+}
+
+tasks.withType(Javadoc) {
+    enabled = false
 }
 
 dependencies {
