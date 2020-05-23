@@ -2,9 +2,9 @@
 
 Reactive implementation of Android runtime permissions using RxJava3.
 
-## API
+## Usage
 
-This library provides simple and lightweight apis that returns a `PermissionResult`.
+This library provides simple and lightweight apis that emitts `PermissionResult`.
 
 Requesting for permissions:
 
@@ -18,7 +18,7 @@ Request for permission results (skips granted permission results):
 RxPermissions(this).requestSkipGranted(...)
 ```
 
-Request for simple permission (Just `true` or `false`):
+Request for simple permission (Emitts `true` or `false`):
 
 ```java
 RxPermissions(this).requestSimple(...)
@@ -41,10 +41,13 @@ PermissionResult.rationale  // true or false
 2. Use `.requestSkipGranted(...)` method to skip the results of already granted permission results.
 3. Use `.requestSimple(...)` method to get just `true` or `false` values, if you don't care about rationale permission results.
 
-## Installation
+## Download
+
 ```
-... Available soon (Keep checking) ...
+implementation 'com.abarajithan.rxpermissions:rxpermissions:1.0.0-beta'
 ```
+
+You need to add `jcenter()` to project level `build.gradle` file.
 
 ## License
 
