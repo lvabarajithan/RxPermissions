@@ -10,9 +10,9 @@
         android:id="@+id/permissions_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/empty_permissions"
+        android:text="@string/empty_permissions_initial"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,10 +22,52 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:text="@string/ask_button"
         android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="@+id/permissions_status"
-        app:layout_constraintStart_toStartOf="@+id/permissions_status"
-        app:layout_constraintTop_toBottomOf="@+id/permissions_status" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="request()" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/request_skip_granted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="requestSkipGranted()" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/request_simple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="requestSimple()" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/privacy_note"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">RxPermissions</string>
+    <string name="empty_permissions_initial">Tap ask permission</string>
     <string name="empty_permissions">No permissions granted</string>
     <string name="ask_button">Ask permission</string>
+    <string name="privacy_note">*These permissions are just for demo purposes</string>
 </resources>
